@@ -41,4 +41,7 @@ export class OrderListComponent implements OnInit {
     return this.orders && this.orders.filter(x => !x.canceled).reduce((prev, cur) => prev + cur.totalCost, 0);
   }
 
+  convertToLocal(date: Date) {
+    return new Date(date + 'Z');
+  }
 }
