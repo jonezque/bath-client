@@ -1,0 +1,21 @@
+<form [formGroup]="form">
+  <mat-form-field>
+    <input matInput placeholder="Наименование" formControlName="name">
+    <mat-error *ngIf="form.get('name').hasError('required')">
+        Необходимо назвзние!
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="number" placeholder="Цена за час, &#x20bd;" formControlName="value">
+    <mat-error *ngIf="form.get('value').hasError('required')">
+        Необходимо значение!
+    </mat-error>
+    <mat-error *ngIf="form.get('value').hasError('min')">
+        не может быть меньше 0!
+    </mat-error>
+  </mat-form-field>
+</form>
+<div style="margin-top: 10px;" fxLayoutAlign="end">
+  <button mat-raised-button color="accent" (click)="createDiscount()">Подтвердить</button>
+</div>
+

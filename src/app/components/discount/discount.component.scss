@@ -1,0 +1,12 @@
+
+@import "../../../variables.scss";
+
+table {
+  width: 100%;
+}
+.mat-row:hover {
+  background: rgb(247, 247, 247);
+}
+.mat-row.selected {
+  background: mat-color($accentPalette);
+}

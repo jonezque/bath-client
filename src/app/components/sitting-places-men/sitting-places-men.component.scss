@@ -1,0 +1,31 @@
+.place {
+  width: 49px;
+  height: 49px;
+  margin: 2px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  box-shadow: 1px 1px 2px grey;
+}
+.lanes {
+  width: 480px;
+  height: 106px;
+  justify-content: space-between;
+  margin: 3px;
+}
+.cell {
+  align-self: center;
+  pointer-events: none;
+  user-select: none;
+}
+.time-left {
+  font-size: 9px;
+  position: absolute;
+  user-select: none;
+  bottom: 0;
+}
+
+button {
+  font-size: 11px;
+}

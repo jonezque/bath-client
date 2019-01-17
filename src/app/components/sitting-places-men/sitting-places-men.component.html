@@ -1,0 +1,58 @@
+<div class="container" fxLayout="row" fxLayoutAlign="center">
+  <mat-card fxFlex="660px">
+      <mat-card-title fxLayout="row wrap" fxLayoutAlign="center"  fxLayoutGap="10px">
+        <button mat-raised-button color="accent" (click)="createOrder()" [disabled]="alreadyTaken()">Создать заказ</button>
+        <button mat-raised-button color="accent" (click)="freePlaces()" [disabled]="alreadyFree()">Освободить</button>
+        <button mat-raised-button color="accent" (click)="addTime()" [disabled]="alreadyFree()">Добавить 30м</button>
+        <button mat-raised-button color="accent" (click)="changePlaces()" [disabled]="!canChange()">Пересадить</button>
+        <button mat-raised-button color="accent" [disabled]="true">Услуги</button>
+        <button mat-raised-button color="accent" [disabled]="true">Аксессуары</button>
+      </mat-card-title>
+    <mat-card-content fxLayout="row" fxLayoutAlign="center center">
+      <div class="horizontal">
+        <div fxLayout="column-reverse wrap" class="lanes">
+          <div appPlace #place="place"
+            [name]="(78-i).toString()"
+            [cab]="true"
+            class="place cab"
+            *ngFor="let p of placesTop; index as i;"
+            [ngClass]="isFree(cell)">
+            <div #cell class="cell">{{place.name}}</div>
+            <div class="time-left">{{minuteToDate(durationMap.get((place.name).toString()))}}</div>
+          </div>
+        </div>
+        <div fxLayout="row wrap" class="lanes">
+          <div appPlace #place="place" [name]="(54-i).toString()" class="place even" *ngFor="let p of placesLane; index as i;" [ngClass]="isFree(cell)">
+            <div #cell class="cell">{{place.name}}</div>
+            <div class="time-left">{{minuteToDate(durationMap.get((place.name).toString()))}}</div>
+          </div>
+        </div>
+        <div fxLayout="row wrap" class="lanes">
+          <div appPlace #place="place" [name]="(36-i).toString()" class="place odd" *ngFor="let p of placesLane; index as i;" [ngClass]="isFree(cell)">
+            <div #cell class="cell">{{place.name}}</div>
+            <div class="time-left">{{minuteToDate(durationMap.get((place.name).toString()))}}</div>
+          </div>
+        </div>
+        <div fxLayout="row wrap" class="lanes">
+          <div appPlace #place="place" [name]="(18-i).toString()"  class="place even" *ngFor="let p of placesLane; index as i;"  [ngClass]="isFree(cell)">
+            <div #cell class="cell">{{place.name}}</div>
+            <div class="time-left">{{minuteToDate(durationMap.get((place.name).toString()))}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="vertical">
+        <div fxLayout="row wrap" fxLayoutAlign="center center">
+          <div appPlace #place="place"
+            [name]="(62-i).toString()"
+            [cab]="true"
+            class="place cab"
+            *ngFor="let p of placesRight; index as i;"
+            [ngClass]="isFree(cell)">
+            <div #cell class="cell">{{place.name}}</div>
+            <div class="time-left">{{minuteToDate(durationMap.get((place.name).toString()))}}</div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,29 @@
+<div style="text-align: center">Время не вышло, укажите причину?</div>
+<div *ngFor="let o of keys">
+  <div  fxLayout="row" fxLayoutAlign="center">
+    Заказ №{{o}} {{ data[o].length == 1 ? 'место' : 'места' }}:
+    <div fxLayout="row">
+      <div style="margin: 0 4px" *ngFor="let p of data[o]">
+        {{p}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<mat-radio-group fxLayoutAlign="center center" style="margin-top: 10px;font-size: 10px;" [(ngModel)]="reason">
+  <mat-radio-button value="0">
+    Клиент ушел
+  </mat-radio-button>
+  <mat-radio-button style="margin-left: 5px;" value="1">
+    Ошибка
+  </mat-radio-button>
+</mat-radio-group>
+
+<mat-form-field [style.visibility]="reason == '1' ? 'visible' : 'hidden'" style="width: 100%" >
+  <textarea #text matInput  required placeholder="Укажите причину" [(ngModel)]="reasonText"></textarea>
+</mat-form-field>
+
+<div style="margin-top: 10px;" fxLayoutAlign="end">
+  <button mat-raised-button color="accent" style="margin-right: 5px" (click)="confirm(false)">Отменить</button>
+  <button mat-raised-button color="accent" (click)="confirm(true)">Подтвердить</button>
+</div>
