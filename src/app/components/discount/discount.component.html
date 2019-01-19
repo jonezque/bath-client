@@ -13,7 +13,7 @@
           <button mat-raised-button [disabled]="!selectedElement" color="accent" (click)="deleteDiscount(selectedElement)">Удалить</button>
         </div>
         <div style="margin-top: 10px">
-          <table mat-table [dataSource]="discounts" class="mat-elevation-z8">
+          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" [trackBy]="track">
             <ng-container matColumnDef="pos">
               <th mat-header-cell *matHeaderCellDef> No. </th>
               <td mat-cell *matCellDef="let element; let i = index;">{{i + 1}}</td>

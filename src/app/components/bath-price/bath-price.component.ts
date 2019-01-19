@@ -7,7 +7,7 @@ import { IBathPrice, PlaceType, RoomType } from '../../services/interfaces';
 @Component({
   selector: 'app-bath-price',
   templateUrl: './bath-price.component.html',
-  styleUrls: ['./bath-price.component.scss']
+  styleUrls: ['./bath-price.component.scss'],
 })
 export class BathPriceComponent implements OnInit {
 
@@ -15,6 +15,10 @@ export class BathPriceComponent implements OnInit {
   @ViewChildren(PlacePriceDirective) priceForms: QueryList<PlacePriceDirective>;
 
   constructor(private db: DbService) { }
+
+  track(_:number, price : IBathPrice) {
+    return price.id;
+  }
 
   ngOnInit() {
     this.db.getPrices().subscribe(x => this.prices = x);

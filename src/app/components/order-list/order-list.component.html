@@ -1,6 +1,7 @@
 <mat-card fxFlex>
   <mat-card-content>
-    <table mat-table multiTemplateDataRows [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <table mat-table multiTemplateDataRows [dataSource]="dataSource"
+    matSort [trackBy]="trackOrder" class="mat-elevation-z8">
       <ng-container matColumnDef="num">
         <th mat-header-cell *matHeaderCellDef> No. </th>
         <td mat-cell *matCellDef="let i = dataIndex;">{{i + 1}}</td>
@@ -40,7 +41,7 @@
       <ng-container matColumnDef="expandedDetail">
         <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
           <div [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-            <div *ngFor="let p of element.bathPlacePositions">
+            <div *ngFor="let p of element.bathPlacePositions; trackBy: trackPos">
               Место №{{p.bathPlace.name}} - длительность {{p.duration}} минут,
               цена за час {{p.discountValue ? p.discountValue : p.price}}&#x20bd;, итого
               {{p.cost}}&#x20bd;

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
@@ -7,7 +7,8 @@ import { IDiscount } from '../../services/interfaces';
 @Component({
   selector: 'app-create-discount',
   templateUrl: './create-discount.component.html',
-  styleUrls: ['./create-discount.component.scss']
+  styleUrls: ['./create-discount.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateDiscountComponent implements OnInit {
   form: FormGroup;

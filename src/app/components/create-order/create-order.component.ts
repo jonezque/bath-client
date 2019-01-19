@@ -1,4 +1,10 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogRef,
@@ -12,7 +18,8 @@ import { IBathPlacePosition, IDiscount, IPlace } from '../../services/interfaces
 @Component({
   selector: 'app-create-order',
   templateUrl: './create-order.component.html',
-  styleUrls: ['./create-order.component.scss']
+  styleUrls: ['./create-order.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateOrderComponent implements OnInit {
   positions: IBathPlacePosition[];

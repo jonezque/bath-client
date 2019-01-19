@@ -15,7 +15,7 @@
             [name]="(78-i).toString()"
             [cab]="true"
             class="place cab"
-            *ngFor="let p of placesTop; index as i;"
+            *ngFor="let p of placesTop; index as i"
             [ngClass]="isFree(cell)">
             <div #cell class="cell">{{place.name}}</div>
             <div class="time-left">{{minuteToDate(durationMap.get((place.name).toString()))}}</div>

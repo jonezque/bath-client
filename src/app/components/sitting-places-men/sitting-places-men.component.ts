@@ -1,4 +1,12 @@
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { MatDialog } from '@angular/material';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
@@ -21,7 +29,8 @@ import { CreateOrderComponent } from '../create-order/create-order.component';
 @Component({
   selector: 'app-sitting-places-men',
   templateUrl: './sitting-places-men.component.html',
-  styleUrls: ['./sitting-places-men.component.scss']
+  styleUrls: ['./sitting-places-men.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SittingPlacesMenComponent implements OnInit, OnDestroy {
   placesTop = new Array<number>(16);
@@ -37,7 +46,7 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
 
   @ViewChildren(PlaceDirective) placeListQuery: QueryList<PlaceDirective>;
 
-  constructor(private db: DbService, private dialog: MatDialog, private hub: HubService) { }
+  constructor(private db: DbService, private dialog: MatDialog, private hub: HubService, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.db.getSittingPlacesM().subscribe(res =>
@@ -253,6 +262,7 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
     this.durationMap.forEach((_v, name) => {
       this.durationMap.set(name, this.minutesFormat(name));
     });
+    this.cd.markForCheck();
   }
 
   private setFreePlaces(ids: any) {

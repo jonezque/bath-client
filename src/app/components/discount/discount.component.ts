@@ -1,26 +1,35 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
+import { MatDialog, MatTableDataSource } from '@angular/material';
 import { switchMap } from 'rxjs/operators';
-import { DbService } from 'src/app/services/db.service';
-import { IDiscount } from 'src/app/services/interfaces';
 
+import { DbService } from '../../services/db.service';
+import { IDiscount } from '../../services/interfaces';
 import { CreateDiscountComponent } from '../create-discount/create-discount.component';
 
 @Component({
   selector: 'app-discount',
   templateUrl: './discount.component.html',
-  styleUrls: ['./discount.component.scss']
+  styleUrls: ['./discount.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DiscountComponent implements OnInit {
-  discounts: IDiscount[];
+  dataSource: MatTableDataSource<IDiscount>;
   selectedElement: IDiscount | null;
 
   displayedColumns: string[] = ['pos', 'name', 'val'];
 
-  constructor(private dialog: MatDialog, private db: DbService) { }
+  constructor(private dialog: MatDialog, private db: DbService, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.db.getDiscount().subscribe(x => this.discounts = x);
+    this.db.getDiscount().subscribe(x => {
+      this.dataSource = new MatTableDataSource(x);
+      this.cd.markForCheck();
+    });
   }
 
   createDiscount(data: IDiscount = null) {
@@ -33,7 +42,10 @@ export class DiscountComponent implements OnInit {
       if (res) {
         this.db.createDiscount(res)
           .pipe(switchMap(_ => this.db.getDiscount()))
-          .subscribe(x => this.discounts = x);
+          .subscribe(x => {
+            this.dataSource = new MatTableDataSource(x);
+            this.cd.markForCheck();
+          });
       }
     });
   }
@@ -41,6 +53,13 @@ export class DiscountComponent implements OnInit {
   deleteDiscount(data: IDiscount) {
     this.db.deleteDiscount(data.id)
       .pipe(switchMap(_ => this.db.getDiscount()))
-      .subscribe(x => this.discounts = x);
+      .subscribe(x => {
+        this.dataSource = new MatTableDataSource(x);
+        this.cd.markForCheck();
+      });
+  }
+
+  track(_:number, discount: IDiscount) {
+    return discount.id;
   }
 }

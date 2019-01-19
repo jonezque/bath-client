@@ -1,4 +1,11 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 import { IBathPlacePosition } from '../../services/interfaces';
@@ -6,7 +13,8 @@ import { IBathPlacePosition } from '../../services/interfaces';
 @Component({
   selector: 'app-cancel-order',
   templateUrl: './cancel-order.component.html',
-  styleUrls: ['./cancel-order.component.scss']
+  styleUrls: ['./cancel-order.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CancelOrderComponent implements OnInit {
   data = {};
