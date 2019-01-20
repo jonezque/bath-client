@@ -22,6 +22,10 @@ export class HubService {
   constructor(private auth: AuthService) {}
 
   start() {
+    if (!this.auth.isAuthorized) {
+      return;
+    }
+
     if (this.connection && this._connection.connection.connectionState === 1) {
       this.stop();
     }

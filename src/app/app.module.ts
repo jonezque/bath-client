@@ -27,6 +27,9 @@ import {
 } from './components/create-discount/create-discount.component';
 import { CreateOrderComponent } from './components/create-order/create-order.component';
 import { DiscountComponent } from './components/discount/discount.component';
+import {
+  FilterOrdersComponent,
+} from './components/filter-orders/filter-orders.component';
 import { LoginComponent } from './components/login/login.component';
 import {
   NavigationMenuComponent,
@@ -45,6 +48,7 @@ import { PlaceDirective } from './directives/place.directive';
 import { AuthGuard } from './services/auth-guard.service';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { AuthService } from './services/auth.service';
+import { FilterOrderService } from './services/filter-order.service';
 
 registerLocaleData(localesRu);
 @NgModule({
@@ -65,6 +69,7 @@ registerLocaleData(localesRu);
     CreateDiscountComponent,
     AlertComponent,
     CancelOrderComponent,
+    FilterOrdersComponent,
   ],
   imports: [
     BrowserModule,
@@ -78,6 +83,7 @@ registerLocaleData(localesRu);
     FormsModule,
   ],
   providers: [
+    FilterOrderService,
     AuthService,
     AuthGuard,
     {
@@ -92,6 +98,7 @@ registerLocaleData(localesRu);
     CreateDiscountComponent,
     AlertComponent,
     CancelOrderComponent,
+    FilterOrdersComponent,
   ],
   bootstrap: [AppComponent],
 })

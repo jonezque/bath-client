@@ -3,9 +3,7 @@
     <button *ngIf="displayAccountIcons" mat-icon-button (click)="sidenav.toggle()">
       <fa-icon [icon]="['fas', 'bars']"></fa-icon>
     </button>
-    <span class="flex-spacer"></span>
-      <a style="color: white; user-select: none;text-decoration: none;"
-      href="https://docs.google.com/spreadsheets/d/1jmaLXTyzB_-QwdTCrlxANajxcJgNf3I0iZKQ9E0dlxY/edit#gid=1386834576">ссылка на доработки</a>
+    <button mat-raised-button *ngIf="showFilterButton" color="accent" (click)="showFilter()">Фильтр</button>
     <span class="flex-spacer"></span>
     <button *ngIf="displayAccountIcons" mat-mini-fab routerLink="/user/profile" matTooltip="Profile" aria-label="User Profile">
       <fa-icon [icon]="['fas', 'user']"></fa-icon>

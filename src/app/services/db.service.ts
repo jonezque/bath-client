@@ -4,12 +4,20 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
-import { IBathPlacePosition, IBathPrice, IDiscount, IOrder, IPlace } from './interfaces';
+import {
+  IBathPlacePosition,
+  IBathPrice,
+  IDiscount,
+  IFilterConfig,
+  IOrder,
+  IPlace,
+} from './interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DbService {
+
   constructor(private http: HttpClient) { }
 
   getSittingPlacesM(): Observable<IPlace[]> {
@@ -24,12 +32,21 @@ export class DbService {
     );
   }
 
-  getOrders() {
-    return this.http.get<IOrder[]>(`${environment.apiUrl}/api/orders`);
+  getOrders(filter: IFilterConfig) {
+    let query = '?';
+    for(const key in filter) {
+      let data = filter[key];
+      if (key === 'start' || key === 'end') {
+        data = filter[key].toUTCString();
+      }
+      query += `${key}=${data || null}&`;
+    }
+
+    return this.http.get<IOrder[]>(`${environment.apiUrl}/api/orders${query}`);
   }
 
   createOrder(data: any) {
-    return this.http.post(`${environment.apiUrl}/api/orders/createbathplaceorder`, Object.assign({...data, date: new Date() }));
+    return this.http.post(`${environment.apiUrl}/api/orders/createbathplaceorder`, Object.assign({...data, date: new Date()}));
   }
 
   cancelOrders(data: any) {

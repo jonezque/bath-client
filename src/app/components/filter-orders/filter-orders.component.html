@@ -1,0 +1,54 @@
+
+  <form fxLayout="column" [formGroup]="formGroup" fxLayoutGap="30px">
+    <div fxLayout>
+      <label style="width: 30%">Отделение: </label>
+      <mat-radio-group style="width: 100%" formControlName="room">
+        <mat-radio-button value="male">Мужское</mat-radio-button>
+        <mat-radio-button value="female">Женское</mat-radio-button>
+        <mat-radio-button value="both">Оба</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div fxLayout>
+      <label style="width: 30%">Оплата: </label>
+      <mat-radio-group style="width: 100%" formControlName="payment">
+        <mat-radio-button value="card">Карта</mat-radio-button>
+        <mat-radio-button value="cash">Наличные</mat-radio-button>
+        <mat-radio-button value="both">Вместе</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div fxLayout>
+      <label style="width: 30%">Статус: </label>
+      <mat-radio-group style="width: 100%" formControlName="status">
+        <mat-radio-button value="ok">Ok</mat-radio-button>
+        <mat-radio-button value="cancel">Отменен</mat-radio-button>
+        <mat-radio-button value="both">Оба</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div fxLayout>
+      <label style="width: 30%">Дата: </label>
+      <mat-radio-group style="width: 100%" formControlName="date" (change)="dateControlChanged($event)">
+        <mat-radio-button value="day">День</mat-radio-button>
+        <mat-radio-button value="interval">Интервал</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div fxLayoutAlign="space-around center">
+      <mat-form-field>
+        <input matInput [matDatepicker]="picker1" placeholder="Выберите дату" formControlName="start">
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="showEndDate">
+        <input matInput [matDatepicker]="picker2" placeholder="Выберите дату" formControlName="end">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </form>
+  <div style="margin-top: 10px;" fxLayoutAlign="end">
+    <button mat-raised-button color="accent" (click)="submit()">Подтвердить</button>
+  </div>

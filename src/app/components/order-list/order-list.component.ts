@@ -1,9 +1,10 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { FilterOrderService } from 'src/app/services/filter-order.service';
 
 import { DbService } from '../../services/db.service';
-import { IBathPlacePosition, IOrder } from '../../services/interfaces';
+import { IBathPlacePosition, IFilterConfig, IOrder } from '../../services/interfaces';
 
 @Component({
   selector: 'app-order-list',
@@ -19,15 +20,14 @@ import { IBathPlacePosition, IOrder } from '../../services/interfaces';
   ],
 })
 export class OrderListComponent implements OnInit {
-  private orders: IOrder[];
   dataSource: MatTableDataSource<IOrder>;
-  displayedColumns = ['num', 'totalCost', 'type', 'canceled', 'comment', 'modified'];
+  displayedColumns = ['num', 'totalCost', 'type', 'canceled', 'comment', 'modified', 'room'];
   expandedElement: IOrder | null;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private db: DbService) { }
+  constructor(private db: DbService, private filterService: FilterOrderService) { }
 
   trackOrder(_:number, order : IOrder) {
     return order.id;
@@ -38,8 +38,11 @@ export class OrderListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.db.getOrders().subscribe(x => {
-      this.orders = x;
+    this.filterService.filterConfig$.subscribe(x => this.init(x))
+  }
+
+  init(filter: IFilterConfig) {
+    this.db.getOrders(filter).subscribe(x => {
       this.dataSource = new MatTableDataSource(x);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -47,12 +50,12 @@ export class OrderListComponent implements OnInit {
   }
 
   getTotal() {
-    return this.orders && this.orders
+    return this.dataSource && this.dataSource.data
       .filter(x => !x.canceled)
       .reduce((prev, cur) => prev + cur.totalCost, 0);
   }
 
-  convertToLocal(date: Date) {
-    return new Date(date + 'Z'); //converting UTC date-time to local
+  convertTime(date: Date) {
+    return new Date(date);
   }
 }

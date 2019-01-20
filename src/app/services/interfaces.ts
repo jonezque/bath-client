@@ -84,3 +84,12 @@ export interface IOrder {
   room: RoomType;
   type: PaymentType;
 }
+
+export interface IFilterConfig {
+  room: string;
+  date: string;
+  end: Date;
+  start: Date;
+  status: string;
+  payment: string;
+}

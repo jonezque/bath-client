@@ -21,3 +21,8 @@ tr.example-element-row:not(.example-expanded-row):active {
 mat-card {
   padding: 0;
 }
+
+mat-header-cell {
+  display:flex;
+  justify-content:flex-end;
+ }

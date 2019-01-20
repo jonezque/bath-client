@@ -1,4 +1,11 @@
-import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 
 import { PlacePriceDirective } from '../../directives/place-price.directive';
 import { DbService } from '../../services/db.service';
@@ -8,20 +15,24 @@ import { IBathPrice, PlaceType, RoomType } from '../../services/interfaces';
   selector: 'app-bath-price',
   templateUrl: './bath-price.component.html',
   styleUrls: ['./bath-price.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BathPriceComponent implements OnInit {
 
   prices: Array<IBathPrice>;
   @ViewChildren(PlacePriceDirective) priceForms: QueryList<PlacePriceDirective>;
 
-  constructor(private db: DbService) { }
+  constructor(private db: DbService, private cd: ChangeDetectorRef) { }
 
   track(_:number, price : IBathPrice) {
     return price.id;
   }
 
   ngOnInit() {
-    this.db.getPrices().subscribe(x => this.prices = x);
+    this.db.getPrices().subscribe(x => {
+      this.prices = x;
+      this.cd.markForCheck();
+    });
   }
 
   getRoomName(p: IBathPrice) {

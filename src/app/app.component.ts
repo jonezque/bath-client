@@ -1,7 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MediaObserver } from '@angular/flex-layout';
-import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
+import {
+  FilterOrdersComponent,
+} from './components/filter-orders/filter-orders.component';
 import { AuthService } from './services/auth.service';
 import { HubService } from './services/hub.service';
 import { Roles } from './services/interfaces';
@@ -9,17 +14,27 @@ import { Roles } from './services/interfaces';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
   private _show = false;
+  showFilterButton = false;
   constructor(private auth: AuthService,
     private router: Router,
     public media: MediaObserver,
-    private hub: HubService) { }
+    private hub: HubService,
+    private dialog: MatDialog
+   ) { }
 
   get displayAccountIcons() {
     return this._show;
+  }
+
+  showFilter() {
+    this.dialog.open(FilterOrdersComponent, {
+      width: '550px',
+    });
   }
 
   ngOnInit() {
@@ -34,7 +49,7 @@ export class AppComponent implements OnInit {
 
     this.auth.user.subscribe(u => {
       if (u.roles && u.roles.includes(Roles.Admin)) {
-        console.log('show');
+        console.log('admin');
         this._show = true;
       } else {
         this._show = false;
@@ -42,6 +57,9 @@ export class AppComponent implements OnInit {
     });
 
     this.hub.start();
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => this.showFilterButton = event.url === '/orders');
   }
 
   logout() {

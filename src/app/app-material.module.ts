@@ -2,11 +2,14 @@ import { NgModule } from '@angular/core';
 import {
   MatButtonModule,
   MatCardModule,
+  MatCheckboxModule,
+  MatDatepickerModule,
   MatDialogModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
   MatListModule,
+  MatNativeDateModule,
   MatPaginatorModule,
   MatRadioModule,
   MatSelectModule,
@@ -36,6 +39,9 @@ import {
     MatRadioModule,
     MatTooltipModule,
     MatSortModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   exports: [
     MatButtonModule,
@@ -54,6 +60,9 @@ import {
     MatRadioModule,
     MatTooltipModule,
     MatSortModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
 })
 export class AppMaterialModule {}

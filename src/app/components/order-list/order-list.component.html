@@ -16,13 +16,19 @@
 
       <ng-container matColumnDef="modified">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Дата </th>
-        <td mat-cell *matCellDef="let element"> {{convertToLocal(element.modified) | date: 'medium'}} </td>
+        <td mat-cell *matCellDef="let element"> {{convertTime(element.modified) | date: 'medium'}} </td>
         <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>
 
       <ng-container matColumnDef="type">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Тип платежа</th>
         <td mat-cell *matCellDef="let element"> {{element.type == 0 ? 'Наличные' : 'Карта'}} </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <ng-container matColumnDef="room">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Отделение</th>
+        <td mat-cell *matCellDef="let element"> {{element.room == 0 ? 'М' : 'Ж'}} </td>
         <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>
 

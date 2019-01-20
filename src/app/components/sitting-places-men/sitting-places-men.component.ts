@@ -134,7 +134,7 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
     const selected = this.positions.filter(x => this.getSelectedNames().includes(x.bathName));
     const current = moment(new Date());
     const orders = selected
-      .filter(x => moment.utc(x.end) > current)
+      .filter(x => moment(x.end) > current)
       .map(x => x.orderId)
       .filter((x, idx, arr) => idx === arr.indexOf(x));
     const ids = selected.map(x => Object.assign({ id: x.bathId }));
@@ -240,7 +240,7 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
 
       if (position) {
         const current = moment(new Date());
-        const end = moment.utc(position.end);
+        const end = moment(position.end);
         return end.diff(current, 'minutes');
       }
     }
