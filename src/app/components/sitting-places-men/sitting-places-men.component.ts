@@ -49,7 +49,7 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
   constructor(private db: DbService, private dialog: MatDialog, private hub: HubService, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.db.getSittingPlacesM().subscribe(res =>
+    this.db.getSittingPlaces('men').subscribe(res =>
       this.sittingPlaces = res
     );
 
@@ -59,7 +59,7 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
     this.intervalId = setInterval(() => this.updateMessage(), 1000 * 60);
 
     this.sub = this.hub.message.subscribe(data => {
-      if (data === 'updated') {
+      if (data === 'men') {
         this.initPositions();
       } else if (data === 'updatePrice') {
         this.updatePrice();
@@ -81,7 +81,7 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
 
     dialogRef.beforeClose().subscribe(res => {
       if (res) {
-        this.db.createOrder(res).subscribe();
+        this.db.createOrder({ ...res, room: 'men' }).subscribe();
         this.removeSelection();
       }
     });
@@ -152,7 +152,7 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
           if (!res.error) {
             this.setFreePlaces(ids);
           } else {
-            this.db.cancelOrders(res).subscribe();
+            this.db.cancelOrders({ ...res, room: 'men' }).subscribe();
             this.removeSelection();
           }
         }
@@ -196,7 +196,7 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
       .filter(p => this.getSelectedNames().includes(p.name))
       .map(x => Object.assign({ id: x.id }));
 
-    this.db.addTime(ids).subscribe();
+    this.db.addTime(ids, 'men').subscribe();
     this.removeSelection();
   }
 
@@ -217,7 +217,7 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
 
       dialogRef.beforeClose().subscribe(res => {
         if (res) {
-          this.db.exchangePlaces(p1.name, p2.name).subscribe();
+          this.db.exchangePlaces(p1.name, p2.name, 'men').subscribe();
           this.removeSelection();
         }
       });
@@ -229,7 +229,7 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
   }
 
   private initPositions() {
-    this.db.getBusyPlaces().subscribe(res =>
+    this.db.getBusyPlaces('men').subscribe(res =>
       this.getPositions(res)
     );
   }
@@ -266,7 +266,7 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
   }
 
   private setFreePlaces(ids: any) {
-    this.db.freePlaces(ids).subscribe();
+    this.db.freePlaces(ids, 'men').subscribe();
     this.removeSelection();
   }
 

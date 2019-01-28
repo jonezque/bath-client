@@ -49,6 +49,7 @@ import { AuthGuard } from './services/auth-guard.service';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { AuthService } from './services/auth.service';
 import { FilterOrderService } from './services/filter-order.service';
+import { SittingPlacesWomenComponent } from './components/sitting-places-women/sitting-places-women.component';
 
 registerLocaleData(localesRu);
 @NgModule({
@@ -70,6 +71,7 @@ registerLocaleData(localesRu);
     AlertComponent,
     CancelOrderComponent,
     FilterOrdersComponent,
+    SittingPlacesWomenComponent,
   ],
   imports: [
     BrowserModule,

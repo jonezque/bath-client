@@ -9,6 +9,9 @@ import { OrderListComponent } from './components/order-list/order-list.component
 import {
   SittingPlacesMenComponent,
 } from './components/sitting-places-men/sitting-places-men.component';
+import {
+  SittingPlacesWomenComponent,
+} from './components/sitting-places-women/sitting-places-women.component';
 import { UsersComponent } from './components/users/users.component';
 import { AuthGuard } from './services/auth-guard.service';
 import { Roles } from './services/interfaces';
@@ -17,6 +20,14 @@ const routes: Routes = [
   {
     path: 'sittingplacesmen',
     component: SittingPlacesMenComponent,
+    canActivate: [AuthGuard],
+    data: {
+      expectedRole: [Roles.Manager, Roles.Admin],
+    }
+  },
+  {
+    path: 'sittingplaceswomen',
+    component: SittingPlacesWomenComponent,
     canActivate: [AuthGuard],
     data: {
       expectedRole: [Roles.Manager, Roles.Admin],

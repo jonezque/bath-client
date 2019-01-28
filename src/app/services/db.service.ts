@@ -20,14 +20,14 @@ export class DbService {
 
   constructor(private http: HttpClient) { }
 
-  getSittingPlacesM(): Observable<IPlace[]> {
-    return this.http.get<IPlace[]>(`${environment.apiUrl}/api/products/getbathplaces`).pipe(
+  getSittingPlaces(room: string): Observable<IPlace[]> {
+    return this.http.get<IPlace[]>(`${environment.apiUrl}/api/products/getbathplaces?room=${room}`).pipe(
       map(val => this.toPlaces(val))
     );
   }
 
-  getBusyPlaces(): Observable<IBathPlacePosition[]> {
-    return this.http.get<IBathPlacePosition[]>(`${environment.apiUrl}/api/orders/getbusyplaces`).pipe(
+  getBusyPlaces(room: string): Observable<IBathPlacePosition[]> {
+    return this.http.get<IBathPlacePosition[]>(`${environment.apiUrl}/api/orders/getbusyplaces?room=${room}`).pipe(
       map(val => this.toPositions(val))
     );
   }
@@ -53,16 +53,16 @@ export class DbService {
     return this.http.post(`${environment.apiUrl}/api/orders/cancelorders`, Object.assign({...data, date: new Date() }));
   }
 
-  freePlaces(places: any) {
-    return this.http.post(`${environment.apiUrl}/api/orders/freeplaces`, { places });
+  freePlaces(places: any, room: string) {
+    return this.http.post(`${environment.apiUrl}/api/orders/freeplaces`, { places, room });
   }
 
-  exchangePlaces(from: string, to: string) {
-    return this.http.post(`${environment.apiUrl}/api/orders/exchangeplaces`, { from, to });
+  exchangePlaces(from: string, to: string, room: string) {
+    return this.http.post(`${environment.apiUrl}/api/orders/exchangeplaces`, { from, to, room });
   }
 
-  addTime(places: any) {
-    return this.http.post(`${environment.apiUrl}/api/orders/addtime`, { places });
+  addTime(places: any, room: string) {
+    return this.http.post(`${environment.apiUrl}/api/orders/addtime`, { places, room });
   }
 
   getPrices() {
