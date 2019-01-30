@@ -41,7 +41,10 @@ import {
 } from './components/product-price-settings/product-price-settings.component';
 import {
   SittingPlacesMenComponent,
-} from './components/sitting-places-men/sitting-places-men.component';
+} from './components/sitting-places/sitting-places-men/sitting-places-men.component';
+import {
+  SittingPlacesWomenComponent,
+} from './components/sitting-places/sitting-places-women/sitting-places-women.component';
 import { UsersComponent } from './components/users/users.component';
 import { PlacePriceDirective } from './directives/place-price.directive';
 import { PlaceDirective } from './directives/place.directive';
@@ -49,7 +52,6 @@ import { AuthGuard } from './services/auth-guard.service';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { AuthService } from './services/auth.service';
 import { FilterOrderService } from './services/filter-order.service';
-import { SittingPlacesWomenComponent } from './components/sitting-places-women/sitting-places-women.component';
 
 registerLocaleData(localesRu);
 @NgModule({

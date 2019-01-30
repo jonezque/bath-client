@@ -1,76 +1,27 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
+import { ChangeDetectorRef, QueryList } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
-import { filter, flatMap } from 'rxjs/operators';
+import { PlaceDirective } from 'src/app/directives/place.directive';
+import { DbService } from 'src/app/services/db.service';
+import { HubService } from 'src/app/services/hub.service';
+import { IBathPlacePosition, IBathPrice, IPlace } from 'src/app/services/interfaces';
 
-import { PlaceDirective } from '../../directives/place.directive';
-import { DbService } from '../../services/db.service';
-import { HubService } from '../../services/hub.service';
-import {
-  IBathPlacePosition,
-  IBathPrice,
-  IPlace,
-  PlaceType,
-  RoomType,
-} from '../../services/interfaces';
 import { AlertComponent } from '../alert/alert.component';
 import { CancelOrderComponent } from '../cancel-order/cancel-order.component';
 import { CreateOrderComponent } from '../create-order/create-order.component';
 
-@Component({
-  selector: 'app-sitting-places-men',
-  templateUrl: './sitting-places-men.component.html',
-  styleUrls: ['./sitting-places-men.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class SittingPlacesMenComponent implements OnInit, OnDestroy {
-  placesTop = new Array<number>(16);
-  placesRight = new Array<number>(8);
-  placesLane = new Array<number>(18);
+export class SittingPlaces {
   intervalId: any;
-
   sittingPlaces: IPlace[];
   price: IBathPrice;
   positions: IBathPlacePosition[];
   durationMap = new Map<string, number>();
   sub: Subscription;
 
-  @ViewChildren(PlaceDirective) placeListQuery: QueryList<PlaceDirective>;
+  _placeListQuery: QueryList<PlaceDirective>;
 
-  constructor(private db: DbService, private dialog: MatDialog, private hub: HubService, private cd: ChangeDetectorRef) { }
-
-  ngOnInit() {
-    this.db.getSittingPlaces('men').subscribe(res =>
-      this.sittingPlaces = res
-    );
-
-    this.updatePrice();
-
-    this.initPositions();
-    this.intervalId = setInterval(() => this.updateMessage(), 1000 * 60);
-
-    this.sub = this.hub.message.subscribe(data => {
-      if (data === 'men') {
-        this.initPositions();
-      } else if (data === 'updatePrice') {
-        this.updatePrice();
-      }
-    });
-  }
-
-  ngOnDestroy() {
-    clearInterval(this.intervalId);
-    this.sub.unsubscribe();
-  }
+  constructor(private room: 'men' | 'women', protected db: DbService, protected dialog: MatDialog, protected hub: HubService, protected cd: ChangeDetectorRef) { }
 
   createOrder() {
     const data = this.sittingPlaces.filter(p => this.getSelectedNames().includes(p.name));
@@ -81,10 +32,23 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
 
     dialogRef.beforeClose().subscribe(res => {
       if (res) {
-        this.db.createOrder({ ...res, room: 'men' }).subscribe();
+        this.db.createOrder({ ...res, room: this.room }).subscribe();
         this.removeSelection();
       }
     });
+  }
+
+  updateMessage() {
+    this.durationMap.forEach((_v, name) => {
+      this.durationMap.set(name, this.minutesFormat(name));
+    });
+    this.cd.markForCheck();
+  }
+
+  initPositions() {
+    this.db.getBusyPlaces(this.room).subscribe(res =>
+      this.getPositions(res)
+    );
   }
 
   alreadyTaken() {
@@ -152,7 +116,7 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
           if (!res.error) {
             this.setFreePlaces(ids);
           } else {
-            this.db.cancelOrders({ ...res, room: 'men' }).subscribe();
+            this.db.cancelOrders({ ...res, room: this.room }).subscribe();
             this.removeSelection();
           }
         }
@@ -196,7 +160,7 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
       .filter(p => this.getSelectedNames().includes(p.name))
       .map(x => Object.assign({ id: x.id }));
 
-    this.db.addTime(ids, 'men').subscribe();
+    this.db.addTime(ids, this.room).subscribe();
     this.removeSelection();
   }
 
@@ -217,34 +181,28 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
 
       dialogRef.beforeClose().subscribe(res => {
         if (res) {
-          this.db.exchangePlaces(p1.name, p2.name, 'men').subscribe();
+          this.db.exchangePlaces(p1.name, p2.name, this.room).subscribe();
           this.removeSelection();
         }
       });
     }
   }
 
+  private getSelectedNames() {
+    return this.getSelected().map(x => x.name);
+  }
+
+  private getSelected() {
+    return this._placeListQuery ? this._placeListQuery.filter(x => x.selected) : [];
+  }
+
   private removeSelection() {
     this.getSelected().forEach(x => x.removeSelection());
   }
 
-  private initPositions() {
-    this.db.getBusyPlaces('men').subscribe(res =>
-      this.getPositions(res)
-    );
-  }
-
-  private minutesFormat(name: string) {
-    if (this.positions) {
-      const position = this.positions.find(x => x.bathName === name);
-
-      if (position) {
-        const current = moment(new Date());
-        const end = moment(position.end);
-        return end.diff(current, 'minutes');
-      }
-    }
-    return null;
+  private setFreePlaces(ids: any) {
+    this.db.freePlaces(ids, this.room).subscribe();
+    this.removeSelection();
   }
 
   private getPositions(positions: IBathPlacePosition[]) {
@@ -258,30 +216,16 @@ export class SittingPlacesMenComponent implements OnInit, OnDestroy {
     setTimeout(() => this.updateMessage());
   }
 
-  private updateMessage() {
-    this.durationMap.forEach((_v, name) => {
-      this.durationMap.set(name, this.minutesFormat(name));
-    });
-    this.cd.markForCheck();
-  }
+  private minutesFormat(name: string) {
+    if (this.positions) {
+      const position = this.positions.find(x => x.bathName === name);
 
-  private setFreePlaces(ids: any) {
-    this.db.freePlaces(ids, 'men').subscribe();
-    this.removeSelection();
-  }
-
-  private getSelected() {
-    return this.placeListQuery ? this.placeListQuery.filter(x => x.selected) : [];
-  }
-  private getSelectedNames() {
-    return this.getSelected().map(x => x.name);
-  }
-
-  private updatePrice() {
-    this.db.getPrices()
-    .pipe(
-      flatMap(x => x),
-      filter(x => x.room === RoomType.men && x.type === PlaceType.cab))
-    .subscribe(x => this.price = x);
+      if (position) {
+        const current = moment(new Date());
+        const end = moment(position.end);
+        return end.diff(current, 'minutes');
+      }
+    }
+    return null;
   }
 }
