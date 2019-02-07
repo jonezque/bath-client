@@ -6,6 +6,7 @@ import { DiscountComponent } from './components/discount/discount.component';
 import { LoginComponent } from './components/login/login.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { OrderListComponent } from './components/order-list/order-list.component';
+import { ProductsComponent } from './components/products/products.component';
 import {
   SittingPlacesMenComponent,
 } from './components/sitting-places/sitting-places-men/sitting-places-men.component';
@@ -66,8 +67,8 @@ const routes: Routes = [
     }
   },
   {
-    path: 'history',
-    component: NotFoundComponent,
+    path: 'products',
+    component: ProductsComponent,
     canActivate: [AuthGuard],
     data: {
       expectedRole: [Roles.Manager, Roles.Admin],

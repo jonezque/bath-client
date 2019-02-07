@@ -12,6 +12,7 @@ import {
   faBars,
   faEnvelopeOpen,
   faKey,
+  faPlus,
   faSignOutAlt,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
@@ -36,9 +37,7 @@ import {
 } from './components/navigation-menu/navigation-menu.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { OrderListComponent } from './components/order-list/order-list.component';
-import {
-  ProductPriceSettingsComponent,
-} from './components/product-price-settings/product-price-settings.component';
+import { ProductsComponent } from './components/products/products.component';
 import {
   SittingPlacesMenComponent,
 } from './components/sitting-places/sitting-places-men/sitting-places-men.component';
@@ -60,7 +59,6 @@ registerLocaleData(localesRu);
     LoginComponent,
     NotFoundComponent,
     OrderListComponent,
-    ProductPriceSettingsComponent,
     UsersComponent,
     SittingPlacesMenComponent,
     NavigationMenuComponent,
@@ -74,6 +72,7 @@ registerLocaleData(localesRu);
     CancelOrderComponent,
     FilterOrdersComponent,
     SittingPlacesWomenComponent,
+    ProductsComponent,
   ],
   imports: [
     BrowserModule,
@@ -95,7 +94,7 @@ registerLocaleData(localesRu);
       useClass: AuthInterceptor,
       multi: true,
     },
-    { provide: LOCALE_ID, useValue: "ru" }
+    { provide: LOCALE_ID, useValue: 'ru' }
   ],
   entryComponents: [
     CreateOrderComponent,
@@ -108,6 +107,6 @@ registerLocaleData(localesRu);
 })
 export class AppModule {
   constructor() {
-    library.add(faUser, faSignOutAlt, faBars, faEnvelopeOpen, faKey);
+    library.add(faUser, faSignOutAlt, faBars, faEnvelopeOpen, faKey, faPlus);
   }
 }

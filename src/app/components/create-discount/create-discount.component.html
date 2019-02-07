@@ -6,7 +6,7 @@
     </mat-error>
   </mat-form-field>
   <mat-form-field>
-    <input matInput type="number" placeholder="Цена за час, &#x20bd;" formControlName="value">
+    <input matInput type="number" [placeholder]="item.type === 'product' ? 'Цена, &#x20bd;' : 'Цена за час, &#x20bd;'" formControlName="value">
     <mat-error *ngIf="form.get('value').hasError('required')">
         Необходимо значение!
     </mat-error>

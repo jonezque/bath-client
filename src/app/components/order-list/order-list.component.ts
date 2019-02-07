@@ -29,20 +29,21 @@ export class OrderListComponent implements OnInit {
 
   constructor(private db: DbService, private filterService: FilterOrderService) { }
 
-  trackOrder(_:number, order : IOrder) {
+  trackOrder(_: number, order: IOrder) {
     return order.id;
   }
 
-  trackPos(_:number, pos : IBathPlacePosition) {
+  trackPos(_: number, pos: IBathPlacePosition) {
     return pos.id;
   }
 
   ngOnInit() {
-    this.filterService.filterConfig$.subscribe(x => this.init(x))
+    this.filterService.filterConfig$.subscribe(x => this.init(x));
   }
 
   init(filter: IFilterConfig) {
     this.db.getOrders(filter).subscribe(x => {
+
       this.dataSource = new MatTableDataSource(x);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;

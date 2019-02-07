@@ -11,6 +11,7 @@ import {
   IFilterConfig,
   IOrder,
   IPlace,
+  IProduct,
 } from './interfaces';
 
 @Injectable({
@@ -87,6 +88,22 @@ export class DbService {
 
   getDiscount() {
     return this.http.get<IDiscount[]>(`${environment.apiUrl}/api/discounts`);
+  }
+
+  createProduct(product: IProduct) {
+    if (product.id) {
+      return this.http.put(`${environment.apiUrl}/api/products/${product.id}`, product);
+    } else {
+      return this.http.post(`${environment.apiUrl}/api/products`, product);
+    }
+  }
+
+  deleteProduct(id: number) {
+    return this.http.delete(`${environment.apiUrl}/api/products/${id}`);
+  }
+
+  getProduct() {
+    return this.http.get<IProduct[]>(`${environment.apiUrl}/api/products/getproducts`);
   }
 
   private toPlaces(data: any[]): IPlace[] {

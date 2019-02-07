@@ -4,8 +4,6 @@
       <button mat-raised-button color="accent" (click)="freePlaces()" [disabled]="alreadyFree()">Освободить</button>
       <button mat-raised-button color="accent" (click)="addTime()" [disabled]="alreadyFree()">Добавить 30м</button>
       <button mat-raised-button color="accent" (click)="changePlaces()" [disabled]="!canChange()">Пересадить</button>
-      <button mat-raised-button color="accent" [disabled]="true">Услуги</button>
-      <button mat-raised-button color="accent" [disabled]="true">Аксессуары</button>
     </mat-card-title>
     <mat-card-content fxLayout="row" fxLayoutAlign="center center">
       <div class="vertical column2">

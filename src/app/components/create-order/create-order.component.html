@@ -1,56 +1,99 @@
-<table *ngIf="positions.length" mat-table [dataSource]="dataSource" style="width: 100%;">
-  <ng-container matColumnDef="place">
-    <th mat-header-cell *matHeaderCellDef> No. </th>
-    <td mat-cell *matCellDef="let place"> {{place.bathName}} </td>
-    <td mat-footer-cell *matFooterCellDef> </td>
-  </ng-container>
+<mat-tab-group dynamicHeight backgroundColor="primary" [selectedIndex]="positions.length ? 0 : 1">
+  <mat-tab label="Места" [disabled]="positions.length == 0">
+    <table *ngIf="positions.length" mat-table [dataSource]="dataSource" style="width: 100%;">
+      <ng-container matColumnDef="place">
+        <th mat-header-cell *matHeaderCellDef> No. </th>
+        <td mat-cell *matCellDef="let place"> {{place.bathName}} </td>
+      </ng-container>
 
-  <ng-container matColumnDef="time">
-    <th mat-header-cell *matHeaderCellDef> Сеанс </th>
-    <td mat-cell *matCellDef="let place">
-      <mat-form-field>
-        <mat-select #duration value="90" (selectionChange)="changeDuration(place, duration.value)">
-          <mat-option value="90">90 мин</mat-option>
-          <mat-option value="120">120 мин</mat-option>
-          <mat-option value="150">150 мин</mat-option>
-          <mat-option value="180">180 мин</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </td>
-    <td mat-footer-cell *matFooterCellDef> </td>
-  </ng-container>
+      <ng-container matColumnDef="time">
+        <th mat-header-cell *matHeaderCellDef> Сеанс </th>
+        <td mat-cell *matCellDef="let place">
+          <mat-form-field>
+            <mat-select #duration value="90" (selectionChange)="changeDuration(place, duration.value)">
+              <mat-option value="90">90 мин</mat-option>
+              <mat-option value="120">120 мин</mat-option>
+              <mat-option value="150">150 мин</mat-option>
+              <mat-option value="180">180 мин</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </ng-container>
 
-  <ng-container matColumnDef="discount">
-    <th mat-header-cell *matHeaderCellDef> Скидка </th>
-    <td mat-cell *matCellDef="let place">
-      <mat-form-field>
-        <mat-select #discount value="0" [disabled]="place.type === 1" (selectionChange)="changeDiscount(place, discount.value)">
-          <mat-option value="0">Без скидки</mat-option>
-          <mat-option *ngFor="let d of discounts" [value]="d.value">{{d.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </td>
-    <td mat-footer-cell *matFooterCellDef><b>Итого</b></td>
-  </ng-container>
+      <ng-container matColumnDef="discount">
+        <th mat-header-cell *matHeaderCellDef> Скидка </th>
+        <td mat-cell *matCellDef="let place">
+          <mat-form-field>
+            <mat-select #discount value="0" [disabled]="place.type === 1" (selectionChange)="changeDiscount(place, discount.value)">
+              <mat-option value="0">Без скидки</mat-option>
+              <mat-option *ngFor="let d of discounts" [value]="d.value">{{d.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </ng-container>
 
-  <ng-container matColumnDef="cost">
-    <th mat-header-cell *matHeaderCellDef> Цена </th>
-    <td mat-cell *matCellDef="let place">
-      {{ recalc(place) | currency: 'RUB' : 'symbol-narrow':'0.0' }}
-    </td>
-    <td mat-footer-cell *matFooterCellDef style="width: 50px;">
-      <b>
-        {{ getTotalCost() | currency: 'RUB' : 'symbol-narrow' : '0.0' }}
-      </b>
-    </td>
-  </ng-container>
+      <ng-container matColumnDef="cost">
+        <th mat-header-cell *matHeaderCellDef> Цена </th>
+        <td mat-cell *matCellDef="let place">
+          {{ recalc(place) | currency: 'RUB' : 'symbol-narrow':'0.0' }}
+        </td>
+      </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="headers"></tr>
-  <tr mat-row *matRowDef="let row; columns: headers;"></tr>
-  <tr mat-footer-row *matFooterRowDef="headers"></tr>
-</table>
-<mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
-<div style="margin-top: 10px;" fxLayoutAlign="space-between" >
+      <tr mat-header-row *matHeaderRowDef="headers"></tr>
+      <tr mat-row *matRowDef="let row; columns: headers;"></tr>
+    </table>
+    <mat-paginator *ngIf="positions.length" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+  </mat-tab>
+
+  <mat-tab label="Аксессуары">
+      <form [formGroup]="form" style="margin-top: 20px;" fxLayoutAlign="space-evenly center">
+        <mat-form-field>
+          <mat-select placeholder="Товар" formControlName="product" (selectionChange)="onChange($event)">
+            <mat-option *ngFor="let p of products" [value]="p.id">{{p.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field style="width: 100px">
+          <input matInput type="number" class="right" placeholder="Количество" formControlName="quantity" (input)="onQuantityChange()">
+          <mat-error *ngIf="form.get('quantity').hasError('required')">
+              Необходимо значение!
+          </mat-error>
+          <mat-error *ngIf="form.get('quantity').hasError('min')">
+              меньше 1!
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field style="width: 100px">
+          <input matInput type="number" readonly class="right" placeholder="Цена" formControlName="price">
+          <div matSuffix>&#x20bd;</div>
+        </mat-form-field>
+        <button (click)="addProduct()" [disabled]="!form.valid" mat-mini-fab color="accent"><fa-icon [icon]="['fas', 'plus']"></fa-icon></button>
+      </form>
+
+      <table mat-table [dataSource]="productSource" [trackBy]="track">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Товар </th>
+          <td mat-cell *matCellDef="let element; let i = index;">{{element.name}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="count">
+          <th mat-header-cell *matHeaderCellDef> Количество </th>
+          <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="totalPrice">
+          <th mat-header-cell *matHeaderCellDef> Цена, &#x20bd;</th>
+          <td mat-cell *matCellDef="let element"> {{element.totalPrice}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+      </table>
+  </mat-tab>
+
+  <mat-tab label="Услуги" disabled>
+  </mat-tab>
+</mat-tab-group>
+
+<div style="margin: 10px 10px;" fxLayoutAlign="space-between" >
   <mat-radio-group [(ngModel)]="payment">
     <mat-radio-button value="0">
       Наличные
@@ -59,5 +102,8 @@
       Кредитная карта
     </mat-radio-button>
   </mat-radio-group>
-  <button mat-raised-button color="accent" (click)="createOrder()">Подтвердить</button>
+  <div>
+      {{ getTotalCost() | currency: 'RUB' : 'symbol-narrow' : '0.0' }}
+  </div>
+  <button mat-raised-button color="accent" (click)="createOrder()" [disabled]="getTotalCost() == 0">Подтвердить</button>
 </div>

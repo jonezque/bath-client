@@ -1,4 +1,4 @@
-<div class="container" fxLayout="row" fxLayoutAlign="center">
+<div class="container" fxLayout fxLayoutAlign="center">
   <mat-card fxFlex>
     <mat-card-header>
       <mat-card-title>
@@ -6,7 +6,7 @@
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div fxLayout="row" fxLayoutAlign="space-evenly center">
+      <div fxLayout fxLayoutAlign="space-evenly center">
         <div appPlacePrice #p="priceType" [id]="price.id" [val]="val" fxLayout="column" *ngFor="let price of prices; trackBy: track">
             <mat-form-field>
               <input matInput type="text" placeholder="Отделение" readonly value="{{getRoomName(price)}}" >

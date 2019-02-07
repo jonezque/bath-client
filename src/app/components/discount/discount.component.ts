@@ -32,7 +32,7 @@ export class DiscountComponent implements OnInit {
     });
   }
 
-  createDiscount(data: IDiscount = null) {
+  createDiscount(data = <IDiscount>{}) {
     const dialogRef = this.dialog.open(CreateDiscountComponent, {
       width: '250px',
       data
@@ -59,7 +59,7 @@ export class DiscountComponent implements OnInit {
       });
   }
 
-  track(_:number, discount: IDiscount) {
+  track(_: number, discount: IDiscount) {
     return discount.id;
   }
 }

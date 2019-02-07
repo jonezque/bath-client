@@ -24,7 +24,7 @@ export class BathPriceComponent implements OnInit {
 
   constructor(private db: DbService, private cd: ChangeDetectorRef) { }
 
-  track(_:number, price : IBathPrice) {
+  track(_: number, price: IBathPrice) {
     return price.id;
   }
 

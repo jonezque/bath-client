@@ -18,7 +18,7 @@ import { IBathPlacePosition } from '../../services/interfaces';
 })
 export class CancelOrderComponent implements OnInit {
   data = {};
-  keys =[];
+  keys = [];
   reason = '1';
   reasonText = '';
 
@@ -29,7 +29,9 @@ export class CancelOrderComponent implements OnInit {
 
   ngOnInit() {
     this.data = this.orders.reduce((prev, cur) => {
-      prev[cur.orderId] || (prev[cur.orderId] = []);
+      if (!prev[cur.orderId]) {
+        prev[cur.orderId] = [];
+      }
       prev[cur.orderId].push(cur.bathName);
       return prev;
     }, {});
@@ -43,7 +45,7 @@ export class CancelOrderComponent implements OnInit {
       this.dialogRef.close();
     } else {
       const result = this.reason === '1' ?
-        { error: true, reason: this.reasonText, orderIds: this.keys }: { error: false };
+        { error: true, reason: this.reasonText, orderIds: this.keys } : { error: false };
       this.dialogRef.close(result);
     }
   }

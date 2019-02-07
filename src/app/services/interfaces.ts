@@ -72,6 +72,12 @@ export interface IDiscount {
   value: number;
 }
 
+export interface IProduct {
+  id: number;
+  name: string;
+  price: number;
+}
+
 export interface IOrder {
   id: number;
   canceled: boolean;
@@ -80,6 +86,7 @@ export interface IOrder {
   modified: Date;
   name: string;
   bathPlacePositions: IBathPlacePosition[];
+  productPositions: IProductPosition[];
   totalCost: number;
   room: RoomType;
   type: PaymentType;
@@ -92,4 +99,12 @@ export interface IFilterConfig {
   start: Date;
   status: string;
   payment: string;
+}
+
+export interface IProductPosition {
+  id: number;
+  name: string;
+  count: number;
+  totalPrice: number;
+  product: IProduct;
 }

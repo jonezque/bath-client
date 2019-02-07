@@ -17,6 +17,7 @@ import {
   MatSnackBarModule,
   MatSortModule,
   MatTableModule,
+  MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
 } from '@angular/material';
@@ -42,6 +43,8 @@ import {
     MatCheckboxModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatSelectModule,
+    MatTabsModule,
   ],
   exports: [
     MatButtonModule,
@@ -63,6 +66,8 @@ import {
     MatCheckboxModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatSelectModule,
+    MatTabsModule,
   ],
 })
 export class AppMaterialModule {}

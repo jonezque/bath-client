@@ -1,0 +1,40 @@
+<div class="container" fxLayout="row" fxLayoutAlign="center">
+  <mat-card fxFlex>
+    <mat-card-header>
+      <mat-card-title>
+        Аксессуары
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div>
+        <div style="margin-top: 10px;" fxLayoutAlign="start">
+          <button mat-raised-button style="margin-right: 5px" color="accent" (click)="createProduct()">Добавить</button>
+          <button mat-raised-button style="margin-right: 5px" [disabled]="!selectedElement" color="accent" (click)="createProduct(selectedElement)">Изменить</button>
+          <button mat-raised-button [disabled]="!selectedElement" color="accent" (click)="deleteProduct(selectedElement)">Удалить</button>
+        </div>
+        <div style="margin-top: 10px">
+          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" [trackBy]="track">
+            <ng-container matColumnDef="pos">
+              <th mat-header-cell *matHeaderCellDef> No. </th>
+              <td mat-cell *matCellDef="let element; let i = index;">{{i + 1}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Наименование </th>
+              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+              <th mat-header-cell *matHeaderCellDef> Цена, &#x20bd;</th>
+              <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;" (click)="selectedElement = selectedElement === element ? null : element"
+              [class.selected]="selectedElement === element"></tr>
+          </table>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

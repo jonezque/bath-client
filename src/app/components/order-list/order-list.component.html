@@ -52,6 +52,9 @@
               цена за час {{p.discountValue ? p.discountValue : p.price}}&#x20bd;, итого
               {{p.cost}}&#x20bd;
             </div>
+            <div *ngFor="let p of element.productPositions;">
+              {{p.product.name}} {{p.count}} шт. {{p.totalPrice}}&#x20bd;
+            </div>
           </div>
         </td>
       </ng-container>
