@@ -115,23 +115,35 @@ export class CreateOrderComponent implements OnInit {
     return pos.id;
   }
 
-  addProduct() {
+  addProduct(add = true) {
     const id = this.form.controls['product'].value;
     if (id != null && this.form.valid) {
-      const product = this.products.filter(x => x.id === id)[0];
-      const count = this.form.controls['quantity'].value;
-      const totalPrice = this.form.controls['price'].value;
+        const product = this.products.filter(x => x.id === id)[0];
+        const count = this.form.controls['quantity'].value;
+        const totalPrice = this.form.controls['price'].value;
+        const newElement = <IProductPosition>{id, name: product.name, count, totalPrice };
+        const alreadyExist = this.productPositions.filter(x => x.id === newElement.id);
 
-      const newElement = <IProductPosition>{id, name: product.name, count, totalPrice };
-      const alreadyExist = this.productPositions.filter(x => x.id === newElement.id);
-      if (alreadyExist.length) {
-        this.productPositions = this.productPositions.filter(x => x.id !== newElement.id);
-        newElement.count += alreadyExist[0].count;
-        newElement.totalPrice = product.price * newElement.count;
-      }
+        if (add) {
+          if (alreadyExist.length) {
+            this.productPositions = this.productPositions.filter(x => x.id !== newElement.id);
+            newElement.count += alreadyExist[0].count;
+            newElement.totalPrice = product.price * newElement.count;
+          }
 
-      this.productPositions = [ ...this.productPositions, newElement];
-      this.productSource = new MatTableDataSource(this.productPositions);
+          this.productPositions = [ ...this.productPositions, newElement];
+        } else if (alreadyExist.length) {
+          this.productPositions = this.productPositions.filter(x => x.id !== newElement.id);
+          newElement.count = alreadyExist[0].count - count;
+          newElement.totalPrice = product.price * newElement.count;
+
+          if (newElement.count > 0) {
+            this.productPositions = [ ...this.productPositions, newElement];
+          }
+        }
+
+        this.productSource = new MatTableDataSource(this.productPositions);
+
     }
   }
 

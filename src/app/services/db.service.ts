@@ -35,12 +35,14 @@ export class DbService {
 
   getOrders(filter: IFilterConfig) {
     let query = '?';
-    for(const key in filter) {
-      let data = filter[key];
-      if (key === 'start' || key === 'end') {
-        data = filter[key].toUTCString();
+    for (const key in filter) {
+      if (filter[key]) {
+        let data = filter[key];
+        if (key === 'start' || key === 'end') {
+          data = filter[key].toUTCString();
+        }
+        query += `${key}=${data || null}&`;
       }
-      query += `${key}=${data || null}&`;
     }
 
     return this.http.get<IOrder[]>(`${environment.apiUrl}/api/orders${query}`);

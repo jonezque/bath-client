@@ -121,7 +121,7 @@ export class SittingPlaces {
                  if (!res.error) {
                    this.setFreePlaces(ids);
                  } else {
-                   this.db.cancelOrders({ ...res, room: this.room }).subscribe();
+                   this.db.cancelOrders({ ...res, room: this.room, bathIds: ids.map(x => x.id) }).subscribe();
                    this.removeSelection();
                  }
                }

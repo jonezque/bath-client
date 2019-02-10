@@ -12,6 +12,7 @@ import {
   faBars,
   faEnvelopeOpen,
   faKey,
+  faMinus,
   faPlus,
   faSignOutAlt,
   faUser,
@@ -107,6 +108,6 @@ registerLocaleData(localesRu);
 })
 export class AppModule {
   constructor() {
-    library.add(faUser, faSignOutAlt, faBars, faEnvelopeOpen, faKey, faPlus);
+    library.add(faUser, faSignOutAlt, faBars, faEnvelopeOpen, faKey, faPlus, faMinus);
   }
 }

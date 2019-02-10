@@ -1,4 +1,4 @@
-<mat-tab-group dynamicHeight backgroundColor="primary" [selectedIndex]="positions.length ? 0 : 1">
+<mat-tab-group mat-stretch-tabs dynamicHeight backgroundColor="primary" [selectedIndex]="positions.length ? 0 : 1">
   <mat-tab label="Места" [disabled]="positions.length == 0">
     <table *ngIf="positions.length" mat-table [dataSource]="dataSource" style="width: 100%;">
       <ng-container matColumnDef="place">
@@ -66,12 +66,13 @@
           <div matSuffix>&#x20bd;</div>
         </mat-form-field>
         <button (click)="addProduct()" [disabled]="!form.valid" mat-mini-fab color="accent"><fa-icon [icon]="['fas', 'plus']"></fa-icon></button>
+        <button (click)="addProduct(false)" [disabled]="!form.valid" mat-mini-fab color="accent"><fa-icon [icon]="['fas', 'minus']"></fa-icon></button>
       </form>
 
       <table mat-table [dataSource]="productSource" [trackBy]="track">
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef> Товар </th>
-          <td mat-cell *matCellDef="let element; let i = index;">{{element.name}}</td>
+          <td mat-cell *matCellDef="let element;">{{element.name}}</td>
         </ng-container>
 
         <ng-container matColumnDef="count">
@@ -83,7 +84,6 @@
           <th mat-header-cell *matHeaderCellDef> Цена, &#x20bd;</th>
           <td mat-cell *matCellDef="let element"> {{element.totalPrice}} </td>
         </ng-container>
-
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
       </table>
