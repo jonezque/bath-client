@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { switchMap } from 'rxjs/operators';
-import { DbService } from 'src/app/services/db.service';
-import { IProduct } from 'src/app/services/interfaces';
 
+import { DbService } from '../../services/db.service';
+import { IBathPrice, IProduct, PlaceType, RoomType } from '../../services/interfaces';
 import { CreateDiscountComponent } from '../create-discount/create-discount.component';
 
 @Component({
@@ -12,16 +12,25 @@ import { CreateDiscountComponent } from '../create-discount/create-discount.comp
   styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent implements OnInit {
-  dataSource: MatTableDataSource<IProduct>;
-  selectedElement: IProduct | null;
+  productDataSource: MatTableDataSource<IProduct>;
+  selectedProduct: IProduct | null;
 
-  displayedColumns: string[] = ['pos', 'name', 'price'];
+  placesDataSource: MatTableDataSource<IBathPrice>;
+  selectedBathPrice: IBathPrice | null;
+
+  displayedProductColumns: string[] = ['pos', 'name', 'price'];
+  displayedPlaceColumns: string[] = ['pos', 'room', 'type', 'price'];
 
   constructor(private dialog: MatDialog, private db: DbService, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.db.getProduct().subscribe(x => {
-      this.dataSource = new MatTableDataSource(x);
+      this.productDataSource = new MatTableDataSource(x);
+      this.cd.markForCheck();
+    });
+
+    this.db.getPrices().subscribe(x => {
+      this.placesDataSource = new MatTableDataSource(x);
       this.cd.markForCheck();
     });
   }
@@ -37,7 +46,7 @@ export class ProductsComponent implements OnInit {
         this.db.createProduct(Object.assign({ price: res.value }, ...res))
           .pipe(switchMap(_ => this.db.getProduct()))
           .subscribe(x => {
-            this.dataSource = new MatTableDataSource(x);
+            this.productDataSource = new MatTableDataSource(x);
             this.cd.markForCheck();
           });
       }
@@ -48,9 +57,35 @@ export class ProductsComponent implements OnInit {
     this.db.deleteProduct(data.id)
       .pipe(switchMap(_ => this.db.getProduct()))
       .subscribe(x => {
-        this.dataSource = new MatTableDataSource(x);
+        this.productDataSource = new MatTableDataSource(x);
         this.cd.markForCheck();
       });
+  }
+
+  getRoomName(p: IBathPrice) {
+    return p.room === RoomType.men ? 'Мужское' : 'Женское';
+  }
+
+  getPlaceName(p: IBathPrice) {
+    return p.type === PlaceType.normal ? 'Стандарт' : 'Кабинка';
+  }
+
+  changeBathPrice(p: IBathPrice) {
+    const dialogRef = this.dialog.open(CreateDiscountComponent, {
+      width: '250px',
+      data: { ...p, type: 'bathprice' }
+    });
+
+    dialogRef.beforeClose().subscribe(res => {
+      if (res) {
+        this.db.setPrice({ price: res.value, id: res.id })
+          .pipe(switchMap(_ => this.db.getPrices()))
+          .subscribe(x => {
+            this.placesDataSource = new MatTableDataSource(x);
+            this.cd.markForCheck();
+          });
+      }
+    });
   }
 
   track(_: number, product: IProduct) {

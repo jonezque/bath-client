@@ -22,7 +22,6 @@ import { AppMaterialModule } from './app-material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AlertComponent } from './components/alert/alert.component';
-import { BathPriceComponent } from './components/bath-price/bath-price.component';
 import { CancelOrderComponent } from './components/cancel-order/cancel-order.component';
 import {
   CreateDiscountComponent,
@@ -65,7 +64,6 @@ registerLocaleData(localesRu);
     NavigationMenuComponent,
     CreateOrderComponent,
     PlaceDirective,
-    BathPriceComponent,
     PlacePriceDirective,
     DiscountComponent,
     CreateDiscountComponent,

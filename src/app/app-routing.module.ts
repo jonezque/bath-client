@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { BathPriceComponent } from './components/bath-price/bath-price.component';
 import { DiscountComponent } from './components/discount/discount.component';
 import { LoginComponent } from './components/login/login.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -40,14 +39,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       expectedRole: [Roles.Manager, Roles.Admin],
-    }
-  },
-  {
-    path: 'bathprice',
-    component: BathPriceComponent,
-    canActivate: [AuthGuard],
-    data: {
-      expectedRole: [Roles.Admin],
     }
   },
   {

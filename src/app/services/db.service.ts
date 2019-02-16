@@ -72,8 +72,8 @@ export class DbService {
     return this.http.get<IBathPrice[]>(`${environment.apiUrl}/api/prices`);
   }
 
-  setPrices(prices: any) {
-    return this.http.put(`${environment.apiUrl}/api/prices`, { prices });
+  setPrice(price: any) {
+    return this.http.put(`${environment.apiUrl}/api/prices`, price);
   }
 
   createDiscount(discount: IDiscount) {

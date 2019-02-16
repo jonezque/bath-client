@@ -1,4 +1,4 @@
-<div class="container" fxLayout="row" fxLayoutAlign="center">
+<div class="container" fxLayout="row wrap" fxLayoutAlign="center">
   <mat-card fxFlex>
     <mat-card-header>
       <mat-card-title>
@@ -9,11 +9,11 @@
       <div>
         <div style="margin-top: 10px;" fxLayoutAlign="start">
           <button mat-raised-button style="margin-right: 5px" color="accent" (click)="createProduct()">Добавить</button>
-          <button mat-raised-button style="margin-right: 5px" [disabled]="!selectedElement" color="accent" (click)="createProduct(selectedElement)">Изменить</button>
-          <button mat-raised-button [disabled]="!selectedElement" color="accent" (click)="deleteProduct(selectedElement)">Удалить</button>
+          <button mat-raised-button style="margin-right: 5px" [disabled]="!selectedProduct" color="accent" (click)="createProduct(selectedProduct)">Изменить</button>
+          <button mat-raised-button [disabled]="!selectedProduct" color="accent" (click)="deleteProduct(selectedProduct)">Удалить</button>
         </div>
         <div style="margin-top: 10px">
-          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" [trackBy]="track">
+          <table mat-table [dataSource]="productDataSource" class="mat-elevation-z8" [trackBy]="track">
             <ng-container matColumnDef="pos">
               <th mat-header-cell *matHeaderCellDef> No. </th>
               <td mat-cell *matCellDef="let element; let i = index;">{{i + 1}}</td>
@@ -29,9 +29,50 @@
               <td mat-cell *matCellDef="let element"> {{element.price}} </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let element; columns: displayedColumns;" (click)="selectedElement = selectedElement === element ? null : element"
-              [class.selected]="selectedElement === element"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedProductColumns"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedProductColumns;" (click)="selectedProduct = selectedProduct === element ? null : element"
+              [class.selected]="selectedProduct === element"></tr>
+          </table>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <mat-card fxFlex>
+    <mat-card-header>
+      <mat-card-title>
+        Посадочные места
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div>
+        <div style="margin-top: 10px;" fxLayoutAlign="start">
+          <button mat-raised-button style="margin-right: 5px" [disabled]="!selectedBathPrice" color="accent" (click)="changeBathPrice(selectedBathPrice)">Изменить</button>
+        </div>
+        <div style="margin-top: 10px">
+          <table mat-table [dataSource]="placesDataSource" class="mat-elevation-z8" [trackBy]="track">
+            <ng-container matColumnDef="pos">
+              <th mat-header-cell *matHeaderCellDef> No. </th>
+              <td mat-cell *matCellDef="let element; let i = index;">{{i + 1}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="room">
+              <th mat-header-cell *matHeaderCellDef> Отделениек </th>
+              <td mat-cell *matCellDef="let element"> {{getRoomName(element)}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef> Тип </th>
+              <td mat-cell *matCellDef="let element"> {{getPlaceName(element)}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+              <th mat-header-cell *matHeaderCellDef> Цена, &#x20bd;</th>
+              <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedPlaceColumns"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedPlaceColumns;" (click)="selectedBathPrice = selectedBathPrice === element ? null : element"
+              [class.selected]="selectedBathPrice === element"></tr>
           </table>
         </div>
       </div>

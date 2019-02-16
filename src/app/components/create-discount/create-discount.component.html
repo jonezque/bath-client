@@ -1,5 +1,5 @@
 <form [formGroup]="form">
-  <mat-form-field>
+  <mat-form-field *ngIf="item.type !== 'bathprice'">
     <input matInput placeholder="Наименование" formControlName="name">
     <mat-error *ngIf="form.get('name').hasError('required')">
         Необходимо назвзние!
