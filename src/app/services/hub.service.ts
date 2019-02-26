@@ -9,59 +9,41 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class HubService {
-  private _connection: any;
-
-  public get connection(): signalR.HubConnection {
-    return this._connection;
-  }
-
-  timer: any;
-  restartInterval = 10000;
+  private hub: signalR.HubConnection;
+  private timer: any;
   message: BehaviorSubject<any> = new BehaviorSubject({});
 
   constructor(private auth: AuthService) {}
 
-  start() {
+  async start() {
     if (!this.auth.isAuthorized) {
       return;
     }
 
-    if (this.connection && this._connection.connection.connectionState === 1) {
-      this.stop();
-    }
-
-    this._connection = new signalR
+    this.hub = new signalR
       .HubConnectionBuilder()
       .withUrl(`${environment.hubUrl}`, { accessTokenFactory: () => this.auth.getToken() })
       .build();
 
-    this.connection.start();
+    await this.connect();
 
-    this.connection.on('notify', (msg: any) => this.message.next(msg));
+    this.hub.onclose(async () => {
+      await this.connect();
+    });
 
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
-
-    this.timer = setInterval(() => {
-      if (!this.connection || this._connection.connection.connectionState !== 1) {
-        this.stop();
-        this.start();
-        console.log('---------------- Socket client restarted ----------------');
-      }
-    }, this.restartInterval);
+    this.hub.on('notify', (msg: any) => this.message.next(msg));
   }
 
-  stop() {
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
+  private async connect() {
     try {
-      if (this.connection) {
-        this.connection.stop();
-      }
+      await this.hub.start();
     } catch {
-
+      if (this.timer) {
+        clearInterval(this.timer);
+      }
+      this.timer = setInterval(async () => {
+        await this.hub.start();
+      }, 5000);
     }
   }
 }
