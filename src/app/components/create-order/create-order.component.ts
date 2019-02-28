@@ -13,6 +13,8 @@ import {
   MatSelectChange,
   MatTableDataSource,
 } from '@angular/material';
+import { filter, switchMap } from 'rxjs/operators';
+import { HubService } from 'src/app/services/hub.service';
 
 import { DbService } from '../../services/db.service';
 import {
@@ -47,7 +49,8 @@ export class CreateOrderComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) private places: IPlace[],
     private dialogRef: MatDialogRef<CreateOrderComponent>,
-    private db: DbService) { }
+    private db: DbService,
+    private hub: HubService) { }
 
   ngOnInit() {
     this.positions = this.places.map(x => <IBathPlacePosition>{
@@ -69,6 +72,16 @@ export class CreateOrderComponent implements OnInit {
     this.dataSource = new MatTableDataSource<IBathPlacePosition>(this.positions);
     this.dataSource.paginator = this.paginator;
     this.db.getDiscount().subscribe(x => this.discounts = x);
+
+    this.hub.message.pipe(
+        filter(msg => msg === 'update-product'),
+        switchMap(() => this.db.getProduct())
+      ).subscribe(x => this.products = x);
+
+    this.hub.message.pipe(
+        filter(msg => msg === 'update-discount'),
+        switchMap(() => this.db.getDiscount())
+      ).subscribe(x => this.discounts = x);
   }
 
   createOrder() {

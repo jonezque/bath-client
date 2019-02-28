@@ -1,9 +1,11 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { FilterOrderService } from 'src/app/services/filter-order.service';
+import { filter } from 'rxjs/operators';
 
 import { DbService } from '../../services/db.service';
+import { FilterOrderService } from '../../services/filter-order.service';
+import { HubService } from '../../services/hub.service';
 import { IBathPlacePosition, IFilterConfig, IOrder } from '../../services/interfaces';
 
 @Component({
@@ -27,7 +29,7 @@ export class OrderListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private db: DbService, private filterService: FilterOrderService) { }
+  constructor(private db: DbService, private filterService: FilterOrderService, private hub: HubService) { }
 
   trackOrder(_: number, order: IOrder) {
     return order.id;
@@ -39,10 +41,13 @@ export class OrderListComponent implements OnInit {
 
   ngOnInit() {
     this.filterService.filterConfig$.subscribe(x => this.init(x));
+    this.hub.message
+      .pipe(filter(x => x === 'men' || x === 'women'))
+      .subscribe(x => this.init(this.filterService.filterConfig$.value));
   }
 
-  init(filter: IFilterConfig) {
-    this.db.getOrders(filter).subscribe(x => {
+  init(f: IFilterConfig) {
+    this.db.getOrders(f).subscribe(x => {
 
       this.dataSource = new MatTableDataSource(x);
       this.dataSource.paginator = this.paginator;

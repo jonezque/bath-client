@@ -16,7 +16,7 @@ export class CreateDiscountComponent implements OnInit {
   ngOnInit() {
     this.form = new FormGroup({
       name: new FormControl((this.item && this.item.name) ||
-       (this.item.type === 'bathprice' && 'bathprice'), [Validators.required, Validators.minLength(2)]),
+       (this.item.type === 'bathprice' && 'bathprice') || '', [Validators.required, Validators.minLength(2)]),
       value: new FormControl(this.item && (this.item.value || this.item.price), [Validators.required, Validators.min(0)]),
     });
   }

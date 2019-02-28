@@ -1,9 +1,14 @@
 
 @import "../../../variables.scss";
 .active-link {
-  background: mat-color($primaryPalette) !important;
+  background: mat-color($accentPalette) !important;
   color: white !important;
 }
 hr {
   margin: 0;
+  border-color: mat-color($accentPalette);
+}
+
+mat-nav-list {
+  padding-top: 0;
 }

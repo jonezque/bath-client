@@ -2,10 +2,17 @@ import { ChangeDetectorRef, QueryList } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { PlaceDirective } from 'src/app/directives/place.directive';
 import { DbService } from 'src/app/services/db.service';
 import { HubService } from 'src/app/services/hub.service';
-import { IBathPlacePosition, IBathPrice, IPlace } from 'src/app/services/interfaces';
+import {
+  IBathPlacePosition,
+  IBathPrice,
+  IPlace,
+  PlaceType,
+  RoomType,
+} from 'src/app/services/interfaces';
 
 import { AlertComponent } from '../alert/alert.component';
 import { CancelOrderComponent } from '../cancel-order/cancel-order.component';
@@ -15,7 +22,7 @@ import { CreateOrderComponent } from '../create-order/create-order.component';
 export class SittingPlaces {
          intervalId: any;
          sittingPlaces: IPlace[];
-         price: IBathPrice;
+         prices: IBathPrice[];
          positions: IBathPlacePosition[];
          durationMap = new Map<string, number>();
          sub: Subscription;
@@ -55,6 +62,9 @@ export class SittingPlaces {
 
          initPositions() {
            this.db.getBusyPlaces(this.room).subscribe(res => this.getPositions(res));
+           this.db.getPrices().subscribe(res => this.prices = res);
+           this.hub.message.pipe(filter(msg => msg === 'update-price')).subscribe(msg =>
+                this.db.getPrices().subscribe(res => this.prices = res));
          }
 
          alreadyTaken() {
@@ -177,7 +187,9 @@ export class SittingPlaces {
            if (selected.length) {
              const pos = selected[0];
              const p2 = this.getSelected().filter(x => x.name !== p1.name)[0];
-             const diff = p1.cab === p2.cab ? 0 : (this.price.price * pos.duration) / 60 - pos.cost;
+             const diff = p1.cab === p2.cab ? 0 : (this.prices
+                .find(x => x.room === (this.room === 'men' ? RoomType.men : RoomType.women) &&
+                x.type === PlaceType.cab).price * pos.duration) / 60 - pos.cost;
 
              const dialogRef = this.dialog.open(AlertComponent, {
                width: '350px',
