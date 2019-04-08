@@ -37,6 +37,8 @@ export class AppComponent implements OnInit {
     });
   }
 
+
+
   ngOnInit() {
     if (!this.auth.user.value.name) {
       this.auth.getUser().subscribe(() => {},
