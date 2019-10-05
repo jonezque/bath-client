@@ -1,12 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  Inject,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { IBathPlacePosition } from '../../services/interfaces';
 
@@ -22,8 +15,6 @@ export class CancelOrderComponent implements OnInit {
   reason = '1';
   reasonText = '';
 
-  @ViewChild('text') textElem: ElementRef;
-
   constructor(@Inject(MAT_DIALOG_DATA) private orders: IBathPlacePosition[],
     private dialogRef: MatDialogRef<CancelOrderComponent>) { }
 
@@ -37,7 +28,6 @@ export class CancelOrderComponent implements OnInit {
     }, {});
 
     this.keys = Object.keys(this.data);
-    this.textElem.nativeElement.focus();
   }
 
   confirm(confirmed: boolean) {

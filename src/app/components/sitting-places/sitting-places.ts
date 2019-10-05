@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, QueryList } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -45,7 +45,7 @@ export class SittingPlaces {
              data,
            });
 
-           dialogRef.beforeClose().subscribe(res => {
+           dialogRef.beforeClosed().subscribe(res => {
              if (res) {
                this.db.createOrder({ ...res, room: this.room }).subscribe();
                this.removeSelection();
@@ -63,8 +63,10 @@ export class SittingPlaces {
          initPositions() {
            this.db.getBusyPlaces(this.room).subscribe(res => this.getPositions(res));
            this.db.getPrices().subscribe(res => this.prices = res);
-           this.hub.message.pipe(filter(msg => msg === 'update-price')).subscribe(msg =>
-                this.db.getPrices().subscribe(res => this.prices = res));
+           this.hub.message.pipe(filter(msg => msg === 'update-price')).subscribe(msg => {
+                this.db.getPrices().subscribe(res => this.prices = res)
+                debugger;
+              });
          }
 
          alreadyTaken() {
@@ -126,7 +128,7 @@ export class SittingPlaces {
                data,
              });
 
-             dialogRef.beforeClose().subscribe(res => {
+             dialogRef.beforeClosed().subscribe(res => {
                if (res) {
                  if (!res.error) {
                    this.setFreePlaces(ids);
@@ -196,7 +198,7 @@ export class SittingPlaces {
                data: { diff, to: p2.name, from: p1.name },
              });
 
-             dialogRef.beforeClose().subscribe(res => {
+             dialogRef.beforeClosed().subscribe(res => {
                if (res) {
                  this.db.exchangePlaces(p1.name, p2.name, this.room).subscribe();
                  this.removeSelection();

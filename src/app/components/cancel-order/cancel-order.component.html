@@ -20,10 +20,10 @@
 </mat-radio-group>
 
 <mat-form-field [style.visibility]="reason == '1' ? 'visible' : 'hidden'" style="width: 100%" >
-  <textarea #text matInput  required placeholder="Укажите причину" [(ngModel)]="reasonText"></textarea>
+  <textarea #text matInput required autofocus placeholder="Укажите причину" [(ngModel)]="reasonText"></textarea>
 </mat-form-field>
 
 <div style="margin-top: 10px;" fxLayoutAlign="end">
   <button mat-raised-button color="accent" style="margin-right: 5px" (click)="confirm(false)">Отменить</button>
-  <button mat-raised-button color="accent" (click)="confirm(true)">Подтвердить</button>
+  <button mat-raised-button color="accent" [disabled]="reason === '1' && reasonText === ''" (click)="confirm(true)">Подтвердить</button>
 </div>

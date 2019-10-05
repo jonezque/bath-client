@@ -8,7 +8,7 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 
 import { PlaceDirective } from '../../../directives/place.directive';
 import { DbService } from '../../../services/db.service';

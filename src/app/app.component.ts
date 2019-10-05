@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MediaObserver } from '@angular/flex-layout';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
@@ -49,16 +49,21 @@ export class AppComponent implements OnInit {
       );
     }
 
-    this.auth.user.subscribe(u => {
+    this.auth.user.subscribe(async (u) => {
       if (u.roles && u.roles.includes(Roles.Admin)) {
         console.log('admin');
         this._show = true;
       } else {
         this._show = false;
       }
+
+      if (u.name) {
+        await this.hub.start();
+      } else {
+        await this.hub.stop();
+      }
     });
 
-    this.hub.start();
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => this.showFilterButton = event.url === '/orders');

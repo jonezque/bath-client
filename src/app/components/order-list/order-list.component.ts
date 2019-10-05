@@ -1,6 +1,8 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { filter } from 'rxjs/operators';
 
 import { DbService } from '../../services/db.service';
@@ -26,8 +28,8 @@ export class OrderListComponent implements OnInit {
   displayedColumns = ['num', 'totalCost', 'type', 'canceled', 'comment', 'modified', 'room'];
   expandedElement: IOrder | null;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   constructor(private db: DbService, private filterService: FilterOrderService, private hub: HubService) { }
 

@@ -6,13 +6,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogRef,
-  MatPaginator,
-  MatSelectChange,
-  MatTableDataSource,
-} from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSelectChange } from '@angular/material/select';
+import { MatTableDataSource } from '@angular/material/table';
 import { filter, switchMap } from 'rxjs/operators';
 import { HubService } from 'src/app/services/hub.service';
 
@@ -45,7 +42,7 @@ export class CreateOrderComponent implements OnInit {
   payment = '0';
 
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 
   constructor(@Inject(MAT_DIALOG_DATA) private places: IPlace[],
     private dialogRef: MatDialogRef<CreateOrderComponent>,

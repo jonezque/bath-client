@@ -6,8 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
+import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faBars,
   faEnvelopeOpen,
@@ -105,7 +104,7 @@ registerLocaleData(localesRu);
   bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor() {
-    library.add(faUser, faSignOutAlt, faBars, faEnvelopeOpen, faKey, faPlus, faMinus);
+  constructor(library: FaIconLibrary) {
+    library.addIcons(faUser, faSignOutAlt, faBars, faEnvelopeOpen, faKey, faPlus, faMinus);
   }
 }
